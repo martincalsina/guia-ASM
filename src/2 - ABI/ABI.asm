@@ -222,19 +222,77 @@ product_2_f:
 ;registros y pila: destination[rdi], x1[?], f1[?], x2[?], f2[?], x3[?], f3[?], x4[?], f4[?]
 ;	, x5[?], f5[?], x6[?], f6[?], x7[?], f7[?], x8[?], f8[?],
 ;	, x9[?], f9[?]
+; dst --> EDI
+; f1 --> XMM0
+; x1 --> ESI
+; f2 --> XMM1
+; x2 --> EDX
+; f3 --> XMM2
+; x3 --> ECX
+; f4 --> XMM3
+; x4 --> R8D
+; f5 --> XMM4
+; x5 --> R9D
+; f6 --> XMM5
+; x6 --> [RBP + 16] 
+; f7 --> XMM6
+; x7 --> [RBP + 24]
+; f8 --> XMM7
+; x8 --> [RBP + 32]
+; f9 --> [RBP + 48]
+; x9 --> [RBP + 40]
+
 product_9_f:
 	;prologo
 	push rbp
 	mov rbp, rsp
 
 	;convertimos los flotantes de cada registro xmm en doubles
-	; COMPLETAR
+	cvtss2sd XMM0, XMM0
+  cvtss2sd XMM1, XMM1
+  cvtss2sd XMM2, XMM2
+  cvtss2sd XMM3, XMM3
+  cvtss2sd XMM4, XMM4
+  cvtss2sd XMM5, XMM5
+  cvtss2sd XMM6, XMM6
+  cvtss2sd XMM7, XMM7
+
+  movss XMM8, DWORD [RBP + 48] ;es un scalar single, se lee con esto y un DWORD pq los floats son de 32 bits
+
+  cvtss2sd XMM8, XMM8
 
 	;multiplicamos los doubles en xmm0 <- xmm0 * xmm1, xmmo * xmm2 , ...
-	; COMPLETAR
+	mulsd XMM0, XMM1
+  mulsd XMM0, XMM2
+  mulsd XMM0, XMM3
+  mulsd XMM0, XMM4
+  mulsd XMM0, XMM5
+  mulsd XMM0, XMM6
+  mulsd XMM0, XMM7
+  mulsd XMM0, XMM8
 
 	; convertimos los enteros en doubles y los multiplicamos por xmm0.
-	; COMPLETAR
+	cvtsi2sd XMM1, ESI
+  cvtsi2sd XMM2, EDX
+  cvtsi2sd XMM3, ECX
+  cvtsi2sd XMM4, R8D
+  cvtsi2sd XMM5, R9D
+  cvtsi2sd XMM6, [RBP + 16]
+  cvtsi2sd XMM7, [RBP + 24]
+  cvtsi2sd XMM8, [RBP + 32]
+  cvtsi2sd XMM9, [RBP + 40]
+
+  mulsd XMM0, XMM1
+  mulsd XMM0, XMM2
+  mulsd XMM0, XMM3
+  mulsd XMM0, XMM4
+  mulsd XMM0, XMM5
+  mulsd XMM0, XMM6
+  mulsd XMM0, XMM7
+  mulsd XMM0, XMM8
+  mulsd XMM0, XMM9
+
+  movsd [RDI], XMM0 
 
 	; epilogo
 	pop rbp
