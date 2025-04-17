@@ -193,7 +193,23 @@ alternate_sum_8_using_sum_4:
 ; SUGERENCIA: investigar uso de instrucciones para convertir enteros a floats y viceversa
 ;void product_2_f(uint32_t * destination, uint32_t x1, float f1);
 ;registros: destination[?], x1[?], f1[?]
+;dst --> RDI pq es un puntero. Los punteros son todos de 64 bits
+;x1 --> ESI pq es un int
+;f1 --> XMMO pq es un float
 product_2_f:
+  ;prólogo
+  push rbp
+  mov rbp, rsp
+
+  cvtsi2ss XMM1, ESI
+  mulss XMM0, XMM1
+
+  cvttss2si EAX, XMM0
+
+  mov [RDI], EAX ;muevo el valor al destination
+
+  pop rbp
+
 	ret
 
 
