@@ -98,13 +98,63 @@ alternate_sum_4_using_c_alternative:
 
 ; uint32_t alternate_sum_8(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t x5, uint32_t x6, uint32_t x7, uint32_t x8);
 ; registros y pila: x1[?], x2[?], x3[?], x4[?], x5[?], x6[?], x7[?], x8[?]
+; usando la convencion de System V AMBD64 ABI, los primeros 6 argumentos de izquierda a derecha
+; se pasan a los registros (como son ints de 32 bits):
+; x1 --> EDI 
+; x2 --> ESI
+; x3 --> EDX
+; x4 --> ECX
+; x5 --> R8D
+; X6 --> R9D
+; y los otros que no tienen registro caen en la pila pusheados de derecha a izquierda.
+; una vez cambiado el rbo al rsp actual:
+; x7 --> [rbp + 16] //mas cerquita pq se pushea luego de x8
+; x8 --> [rbp + 24] //notar que rbp + 0 es el nuevo base pointer, rbp + 8 es donde esta el valro de retorno
 alternate_sum_8:
 	;prologo
+  push rbp ;justo dsp del valor de retorno
+  mov rbp, rsp
+  
+  ;paso a guardar los registros en la pila para que no se mueran al hacer llamadas
+  push R9 ;x6
+  push R8 ;x5
+  push RCX ;x4
+  push RDX ;x3
 
-	; COMPLETAR
+  ;hago x1 - x2
+  call restar_c ;usa EDI = x1, ESI = x2 y hace la resta, la devuelve en EAX
+  mov EDI, EAX
+  pop RDX
+  mov ESI, EDX
+  
+  call sumar_c; usa EDI = x1-x2, ESI= x3 y suma
+  mov EDI, EAX
+  pop RCX
+  mov ESI, ECX
+
+  call restar_c ;usa EDI = x1-x2+x3 ESI = x4 y resta
+  mov EDI, EAX
+  pop R8
+  mov ESI, R8D ;usa EDI = x1-x2+x3-x4, ESI = x5 y suma
+
+  call sumar_c
+  mov EDI, EAX
+  pop R9
+  mov ESI, R9D ;us EDI = x1-x2+x3-x4+x5 y ESI = x6, toca restar
+
+  call restar_c
+  mov EDI, EAX
+  mov ESI, DWORD [rbp + 16] ;tengo el alternate de 6 en EDI y en ESI me traigo x7
+
+  call sumar_c
+  mov EDI, EAX
+  mov ESI, DWORD [rbp + 24] ;me traigo el x8 y termino la resta
+
+  call restar_c
 
 	;epilogo
-	ret
+  pop rbp ;me traigo el viejo basepointer con el que trabajaba mi funcion invocadora
+	ret ;vuelvo la suma alternada total quedó en EAX 
 
 
 ; SUGERENCIA: investigar uso de instrucciones para convertir enteros a floats y viceversa
