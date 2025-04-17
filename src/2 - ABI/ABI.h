@@ -42,6 +42,9 @@ int32_t alternate_sum_4_using_c_alternative(uint32_t x1, uint32_t x2, uint32_t x
 // devuelve el resultado de la operación x1 - x2 + x3 - x4 + x5 - x6 + x7 - x8
 uint32_t alternate_sum_8(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t x5, uint32_t x6, uint32_t x7, uint32_t x8);
 
+//lo mismo pero usando sum4
+uint32_t alternate_sum_8_using_sum_4(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t x5, uint32_t x6, uint32_t x7, uint32_t x8);
+
 // Hace la multiplicación x1 * f1 y el resultado se almacena en destination. Los dígitos decimales del resultado se eliminan mediante truncado
 void product_2_f(uint32_t *destination, uint32_t x1, float f1);
 

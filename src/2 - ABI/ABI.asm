@@ -12,6 +12,7 @@ global alternate_sum_4
 global alternate_sum_4_using_c
 global alternate_sum_4_using_c_alternative
 global alternate_sum_8
+global alternate_sum_8_using_sum_4
 global product_2_f
 global product_9_f
 
@@ -155,6 +156,38 @@ alternate_sum_8:
 	;epilogo
   pop rbp ;me traigo el viejo basepointer con el que trabajaba mi funcion invocadora
 	ret ;vuelvo la suma alternada total quedó en EAX 
+
+; lo mismo que antes pero llamando a sum_4
+alternate_sum_8_using_sum_4:
+  ;prologo
+  push rbp
+  mov rbp, rsp
+
+  ;a sum_4 le voy a pasar x1, x2, x3, x4 que estan en EDI, ESI, EDX, ECX ya
+  ;debo hacr que x5 y x6 sobreviva a los llamados
+  push R9; //x6 son los bits de abajo
+  push R8; x5 son los bits de abajo
+
+  call alternate_sum_4_using_c
+  
+  ;ahora EAX tiene x1-x2+x3-x4, puedo hacer x5-x6+x7-x8 y sumar ambos resultados
+  pop RDI ;x5
+  pop RSI ;x6
+  mov EDX, DWORD [rbp + 16] ;x7
+  mov ECX, DWORD [rbp + 24] ;x8
+  push RAX ;me guardo el viejo resultado, RAX es EAX en 64 bits
+
+  call alternate_sum_4_using_c
+  ;ahora EAX tiene x5-x6+x7-x8
+  pop RDI ;x1-x2+x3-x4
+  mov ESI, EAX ;x5-x6+x7-x8
+
+  call sumar_c ;sumo los res parciales
+
+  ;prólogo
+  pop rbp;
+  ret
+
 
 
 ; SUGERENCIA: investigar uso de instrucciones para convertir enteros a floats y viceversa
