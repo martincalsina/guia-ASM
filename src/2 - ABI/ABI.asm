@@ -200,11 +200,13 @@ product_2_f:
   ;prólogo
   push rbp
   mov rbp, rsp
+  
+  ;los paso ambos a double para que la multiplicacion sea mas precisa, le estaba errando por uno al resultado
+  cvtsi2sd XMM1, ESI     ; int → double
+  cvtss2sd XMM0, XMM0    ; float → double
+  mulsd XMM0, XMM1       ; double * double
 
-  cvtsi2ss XMM1, ESI
-  mulss XMM0, XMM1
-
-  cvttss2si EAX, XMM0
+  cvttsd2si EAX, XMM0    ; truncar double → int
 
   mov [RDI], EAX ;muevo el valor al destination
 

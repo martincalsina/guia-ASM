@@ -20,6 +20,6 @@ int main() {
 	assert(*dst == 7);
 	free(dst);
 
-	assert(alternate_sum_4_using_c_alternative(8, 2, 5, 1) == 6);
+	assert(alternate_sum_4_using_c_alternative(8, 2, 5, 1) == 10);
 	return 0;
 }
