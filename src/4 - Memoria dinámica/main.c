@@ -9,5 +9,7 @@
 
 int main() {
 	/* Acá pueden realizar sus propias pruebas */
+	char* str = "Omega 4";
+	strClone(str);
 	return 0;
 }

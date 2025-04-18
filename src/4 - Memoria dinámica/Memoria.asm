@@ -59,8 +59,46 @@ strCmp:
 		ret
 
 ; char* strClone(char* a)
+; a --> RDI, es un puntero, 64 bits.
 strClone:
-	ret
+
+	;prologo
+	push RBP
+	mov RBP, RSP ;voy a tener que usar strLen
+
+	;busco la longitud del char para saber cuanta memoria pedir
+	push RDI ;me guardo el puntero al char
+	sub RSP, 8; alineo la pila
+
+	call strLen
+
+	mov EDI, EAX ;me traigo la longitud del char y la pongo en EDI
+	add EDI, 1 ;le incremento 1, necesito memoria tambien para el \0
+
+	call malloc ;pide long(char) + 1 de memoria
+
+	;ahora en RAX tengo el puntero
+	add RSP, 8
+	pop RDI ;recupero el puntero a char
+
+	mov RSI, RAX ;muevo el inicio de mi copia del char a RSI
+	mov RBX, RAX ;me guardo una copia para devolverlo al final 
+
+	.loop_while:
+		mov DL, byte [RDI] ;agarro lo que está apuntando el puntero de char
+		mov byte [RSI], DL ;copio lo que haya
+		test DL, DL ;veo si es NULL
+		je .end ;si lo es, termine
+		;si no, pongo algo donde estoy
+		
+		inc RSI
+		inc RDI;puntero que me pasaron, veo el siguiente char
+		jmp .loop_while
+
+	.end:
+		mov RAX, RBX
+		pop RBP
+		ret
 
 ; void strDelete(char* a)
 strDelete:
