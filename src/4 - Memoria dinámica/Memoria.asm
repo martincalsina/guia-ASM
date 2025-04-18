@@ -102,10 +102,25 @@ strClone:
 
 ; void strDelete(char* a)
 strDelete:
-	ret
+	push RBP
+    mov RBP, RSP
+
+    call free
+
+    pop RBP
+    ret
 
 ; void strPrint(char* a, FILE* pFile)
+; a --> RDI
+; pFile --> RSI, son ambos punteros
 strPrint:
+	;debo swapear los valores, el fprintf de c espera fprintf(FILE* pFile, char* a);
+	mov RDX, RDI ;registro auxiliar
+	mov RDI, RSI ;paso pFile al RDI
+	mov RSI, RDX ;paso a al RSI
+
+	call fprintf
+
 	ret
 
 ; uint32_t strLen(char* a)
