@@ -1,0 +1,6 @@
+- Corrí gdb validate_key y puse un breakout en main
+- encontré las funciones `encode` y `print_authentication_message` tras hacer un info functions, solo pude acceder a la segunda
+- desde ahi hice un `backtrace` y vi que se habian llamao `main` -> `do_some_stuff` -> `do_some_more_stuff`.
+- vi cada una con `info frame` y printee la direccion que tenian en local args como `(char*)`
+- daba algo raro y entonces hice `p ({char*} <dir>)@16` en cada uno para ver mas posiciones
+- en `do_more_stuff` encontré una tal `[4] = 0x555555559300 "clave_192.168.1.5"`, era la clave
