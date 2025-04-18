@@ -31,7 +31,20 @@ strPrint:
 	ret
 
 ; uint32_t strLen(char* a)
+; a --> RDI pq es un puntero, son todos de 64 bits
 strLen:
-	ret
+	xor RAX, RAX
+	mov RSI, [RDI + 0]
+	
+	.loop_while:
+		test SIL, SIL ;evaluo si RSI es el caracter nulo, pero como son chars solo veo de a un byte
+		je .end ;si lo es, termino
+
+		add RAX, 1
+		mov RSI, [RDI+RAX] ;veo el siguiente caracter
+		jmp .loop_while
+
+	.end:
+		ret
 
 
