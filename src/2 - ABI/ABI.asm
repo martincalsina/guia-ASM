@@ -281,10 +281,10 @@ product_9_f:
   cvtsi2sd XMM3, ECX
   cvtsi2sd XMM4, R8D
   cvtsi2sd XMM5, R9D
-  cvtsi2sd XMM6, [RBP + 16]
-  cvtsi2sd XMM7, [RBP + 24]
-  cvtsi2sd XMM8, [RBP + 32]
-  cvtsi2sd XMM9, [RBP + 40]
+  cvtsi2sd XMM6, DWORD [RBP + 16]
+  cvtsi2sd XMM7, DWORD [RBP + 24]
+  cvtsi2sd XMM8, DWORD [RBP + 32]
+  cvtsi2sd XMM9, DWORD [RBP + 40]
 
   mulsd XMM0, XMM1
   mulsd XMM0, XMM2
