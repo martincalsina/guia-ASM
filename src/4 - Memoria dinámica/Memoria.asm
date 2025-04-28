@@ -19,6 +19,9 @@ global strLen
 ; b --> RSI ambos son punteros, 64 bits.
 strCmp:
 
+	push RBP
+	mov RBP, RSP
+
 	mov DL, byte [RDI + 0] ;primer caracter de a
 	mov CL, byte [RSI + 0] ;primer caracter de b
 	
@@ -56,6 +59,7 @@ strCmp:
 		jmp .end
 	
 	.end:
+		pop RBP
 		ret
 
 ; char* strClone(char* a)
