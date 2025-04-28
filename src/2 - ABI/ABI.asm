@@ -113,7 +113,7 @@ alternate_sum_4_using_c_alternative:
 ; x8 --> [rbp + 24] //notar que rbp + 0 es el nuevo base pointer, rbp + 8 es donde esta el valro de retorno
 alternate_sum_8:
 	;prologo
-  push rbp ;justo dsp del valor de retorno
+  push rbp ;justo dsp del valor de retorno, pila alineada
   mov rbp, rsp
   
   ;paso a guardar los registros en la pila para que no se mueran al hacer llamadas
@@ -125,22 +125,26 @@ alternate_sum_8:
   ;hago x1 - x2
   call restar_c ;usa EDI = x1, ESI = x2 y hace la resta, la devuelve en EAX
   mov EDI, EAX
-  pop RDX
+  pop RDX ;pila desalineada
+  sub RSP, 8 ;pila alineada
   mov ESI, EDX
   
   call sumar_c; usa EDI = x1-x2, ESI= x3 y suma
   mov EDI, EAX
-  pop RCX
+  add RSP, 8 ;pila desalineada
+  pop RCX ;pila alineada
   mov ESI, ECX
 
   call restar_c ;usa EDI = x1-x2+x3 ESI = x4 y resta
   mov EDI, EAX
-  pop R8
+  pop R8 ;pila desalineada
+  sub RSP, 8 ;pila alineada
   mov ESI, R8D ;usa EDI = x1-x2+x3-x4, ESI = x5 y suma
 
   call sumar_c
   mov EDI, EAX
-  pop R9
+  add RSP, 8 ;pila desalineada
+  pop R9 ;pila alineada
   mov ESI, R9D ;us EDI = x1-x2+x3-x4+x5 y ESI = x6, toca restar
 
   call restar_c
