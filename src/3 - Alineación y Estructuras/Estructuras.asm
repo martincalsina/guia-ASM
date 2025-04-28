@@ -32,6 +32,7 @@ global cantidad_total_de_elementos_packed
 ;registros: lista[?]
 ;lista --> rdi, es un puntero
 cantidad_total_de_elementos:
+
 	xor RAX, RAX; inicializo en 0 la cant de elems
 	mov RSI, [RDI + LISTA_OFFSET_HEAD] ;
 
@@ -52,6 +53,7 @@ cantidad_total_de_elementos:
 ;registros: lista[?]
 ; lista --> RDI, es un puntero de 64 bits
 cantidad_total_de_elementos_packed:
+
 	xor EAX, EAX; contador
 	mov RSI, [RDI + PACKED_LISTA_OFFSET_HEAD]
 	.loop_start:
@@ -64,5 +66,6 @@ cantidad_total_de_elementos_packed:
 		jmp .loop_start
 
 	.end:
+
 		ret
 
